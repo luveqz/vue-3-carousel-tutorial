@@ -1,20 +1,44 @@
 <template>
   <div class="carousel">
-    <div class="inner">
+    <div class="inner" ref="inner" :style="innerStyles">
       <div class="card" v-for="card in cards" :key="card">
         {{ card }}
       </div>
     </div>
   </div>
   <button>prev</button>
-  <button>next</button>
+  <button @click="next">next</button>
 </template>
 
 <script>
 export default {
   data () {
     return {
-      cards: [1, 2, 3, 4, 5, 6, 7, 8]
+      cards: [1, 2, 3, 4, 5, 6, 7, 8],
+      innerStyles: {},
+      step: ''
+    }
+  },
+
+  mounted () {
+    this.setStep()
+  },
+
+  methods: {
+    setStep () {
+      const innerWidth = this.$refs.inner.scrollWidth
+      const totalCards = this.cards.length
+      this.step = `${innerWidth / totalCards}px`
+    },
+
+    next () {
+      this.moveLeft()
+    },
+
+    moveLeft () {
+      this.innerStyles = {
+        transform: `translateX(-${this.step})`
+      }
     }
   }
 }
