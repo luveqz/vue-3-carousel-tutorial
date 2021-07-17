@@ -16,7 +16,8 @@ export default {
     return {
       cards: [1, 2, 3, 4, 5, 6, 7, 8],
       innerStyles: {},
-      step: ''
+      step: '',
+      transitioning: false
     }
   },
 
@@ -32,12 +33,17 @@ export default {
     },
 
     next () {
+      if (this.transitioning) return
+
+      this.transitioning = true
+
       this.moveLeft()
 
       this.afterTransition(() => {
         const card = this.cards.shift()
         this.cards.push(card)
         this.resetTranslate()
+        this.transitioning = false
       })
     },
 
