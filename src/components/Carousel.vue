@@ -37,6 +37,7 @@ export default {
       this.afterTransition(() => {
         const card = this.cards.shift()
         this.cards.push(card)
+        this.resetTranslate()
       })
     },
 
@@ -52,6 +53,13 @@ export default {
         this.$refs.inner.removeEventListener('transitionend', listener)
       }
       this.$refs.inner.addEventListener('transitionend', listener)
+    },
+
+    resetTranslate () {
+      this.innerStyles = {
+        transition: 'none',
+        transform: 'translateX(0)'
+      }
     }
   }
 }
