@@ -33,12 +33,25 @@ export default {
 
     next () {
       this.moveLeft()
+
+      this.afterTransition(() => {
+        const card = this.cards.shift()
+        this.cards.push(card)
+      })
     },
 
     moveLeft () {
       this.innerStyles = {
         transform: `translateX(-${this.step})`
       }
+    },
+
+    afterTransition (callback) {
+      const listener = () => {
+        callback()
+        this.$refs.inner.removeEventListener('transitionend', listener)
+      }
+      this.$refs.inner.addEventListener('transitionend', listener)
     }
   }
 }
