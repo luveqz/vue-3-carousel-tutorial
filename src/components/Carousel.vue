@@ -23,6 +23,7 @@ export default {
 
   mounted () {
     this.setStep()
+    this.resetTranslate()
   },
 
   methods: {
@@ -49,7 +50,8 @@ export default {
 
     moveLeft () {
       this.innerStyles = {
-        transform: `translateX(-${this.step})`
+        transform: `translateX(-${this.step})
+                    translateX(-${this.step})`
       }
     },
 
@@ -64,7 +66,7 @@ export default {
     resetTranslate () {
       this.innerStyles = {
         transition: 'none',
-        transform: 'translateX(0)'
+        transform: `translateX(-${this.step})`
       }
     }
   }
