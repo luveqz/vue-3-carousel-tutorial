@@ -6,7 +6,7 @@
       </div>
     </div>
   </div>
-  <button>prev</button>
+  <button @click="prev">prev</button>
   <button @click="next">next</button>
 </template>
 
@@ -48,9 +48,31 @@ export default {
       })
     },
 
+    prev () {
+      if (this.transitioning) return
+
+      this.transitioning = true
+
+      this.moveRight()
+
+      this.afterTransition(() => {
+        const card = this.cards.pop()
+        this.cards.unshift(card)
+        this.resetTranslate()
+        this.transitioning = false
+      })
+    },
+
     moveLeft () {
       this.innerStyles = {
         transform: `translateX(-${this.step})
+                    translateX(-${this.step})`
+      }
+    },
+
+    moveRight () {
+      this.innerStyles = {
+        transform: `translateX(${this.step})
                     translateX(-${this.step})`
       }
     },
