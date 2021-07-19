@@ -99,9 +99,6 @@ export default {
 .carousel {
   width: 170px;
   overflow: hidden;
-
-  /* optional */
-  margin-bottom: 10px;
 }
 
 .inner {
@@ -116,9 +113,16 @@ export default {
 
   /* optional */
   height: 40px;
+  background-color: #39b1bd;
+  color: white;
   border-radius: 4px;
-  background-color: #b0b0b0;
   align-items: center;
   justify-content: center;
+}
+
+/* optional */
+button {
+  margin-right: 5px;
+  margin-top: 10px;
 }
 </style>
