@@ -35,10 +35,7 @@ Let's start with this basic component:
 
 ![Code sample 1](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/2z0keaykxbk2aby9jm8h.png)
 
-Explanation:
-
-- **Line 2**: This is exactly the structure from section 1. The `.carousel` container is the frame within which the cards will move.
-- **Lines 9-10**: Our navigation buttons.
+This is exactly the structure from section 1. The `.carousel` container is the frame within which the cards will move.
 
 ## 3. Adding styles
 
