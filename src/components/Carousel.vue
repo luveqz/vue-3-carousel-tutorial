@@ -11,106 +11,105 @@
 </template>
 
 <script>
+import {ref,onMounted} from '@vue/runtime-core'
+
 export default {
-  data () {
-    return {
-      cards: [1, 2, 3, 4, 5, 6, 7, 8],
-      innerStyles: {},
-      step: '',
-      transitioning: false
+  name: "Carousel",
+  setup() {
+    const cards = ref([1, 2, 3, 4, 5, 6, 7, 8])
+    const innerStyles = ref({})
+    const step = ref('')
+    const transitioning = ref(false)
+    const inner = ref(null)
+
+    function setStep () {
+      const innerWidth = inner.value.scrollWidth
+      const totalCards = cards.value.length
+      step.value = `${innerWidth / totalCards}px`
     }
-  },
 
-  mounted () {
-    this.setStep()
-    this.resetTranslate()
-  },
-
-  methods: {
-    setStep () {
-      const innerWidth = this.$refs.inner.scrollWidth
-      const totalCards = this.cards.length
-      this.step = `${innerWidth / totalCards}px`
-    },
-
-    next () {
-      if (this.transitioning) return
-
-      this.transitioning = true
-
-      this.moveLeft()
-
-      this.afterTransition(() => {
-        const card = this.cards.shift()
-        this.cards.push(card)
-        this.resetTranslate()
-        this.transitioning = false
+    function next () {
+      if (transitioning.value) return
+      transitioning.value = true
+      moveLeft()
+      afterTransition(() => {
+        const card = cards.value.shift()
+        cards.value.push(card)
+        resetTranslate()
+        transitioning.value = false
       })
-    },
+    }
 
-    prev () {
-      if (this.transitioning) return
-
-      this.transitioning = true
-
-      this.moveRight()
-
-      this.afterTransition(() => {
-        const card = this.cards.pop()
-        this.cards.unshift(card)
-        this.resetTranslate()
-        this.transitioning = false
+    function prev () {
+      if (transitioning.value) return
+      transitioning.value = true
+      moveRight()
+      afterTransition(() => {
+        const card = cards.value.pop()
+        cards.value.unshift(card)
+        resetTranslate()
+        transitioning.value = false
       })
-    },
+    }
 
-    moveLeft () {
-      this.innerStyles = {
-        transform: `translateX(-${this.step})
-                    translateX(-${this.step})`
+    function moveLeft () {
+      innerStyles.value = {
+        transform: `translateX(-${step.value})
+                    translateX(-${step.value})`
       }
-    },
+    }
 
-    moveRight () {
-      this.innerStyles = {
-        transform: `translateX(${this.step})
-                    translateX(-${this.step})`
+    function moveRight () {
+      innerStyles.value = {
+        transform: `translateX(${step.value})
+                    translateX(-${step.value})`
       }
-    },
+    }
 
-    afterTransition (callback) {
+    function afterTransition (callback) {
       const listener = () => {
         callback()
-        this.$refs.inner.removeEventListener('transitionend', listener)
+        inner.value.removeEventListener('transitionend', listener)
       }
-      this.$refs.inner.addEventListener('transitionend', listener)
-    },
+      inner.value.addEventListener('transitionend', listener)
+    }
 
-    resetTranslate () {
-      this.innerStyles = {
+    function resetTranslate () {
+      innerStyles.value = {
         transition: 'none',
-        transform: `translateX(-${this.step})`
+        transform: `translateX(-${step.value})`
       }
+    }
+
+    onMounted(() => {
+      setStep()
+      resetTranslate()
+    });
+
+    return {
+      cards,
+      next,
+      prev,
+      innerStyles,
+      inner,
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
 .carousel {
   width: 170px;
   overflow: hidden;
 }
-
 .inner {
   transition: transform 0.2s;
   white-space: nowrap;
 }
-
 .card {
   width: 40px;
   margin-right: 10px;
   display: inline-flex;
-
   /* optional */
   height: 40px;
   background-color: #39b1bd;
@@ -119,7 +118,6 @@ export default {
   align-items: center;
   justify-content: center;
 }
-
 /* optional */
 button {
   margin-right: 5px;
