@@ -1,7 +1,7 @@
 <template>
   <div class="carousel">
-    <div class="inner" ref="inner" :style="innerStyles">
-      <div class="card" v-for="card in cards" :key="card">
+    <div ref="inner" :style="innerStyles" class="inner">
+      <div v-for="card in cards" :key="card" class="card">
         {{ card }}
       </div>
     </div>
@@ -10,92 +10,83 @@
   <button @click="next">next</button>
 </template>
 
-<script>
-export default {
-  data () {
-    return {
-      cards: [1, 2, 3, 4, 5, 6, 7, 8],
-      innerStyles: {},
-      step: '',
-      transitioning: false
-    }
-  },
+<script setup>
+import { ref, onMounted } from 'vue'
 
-  mounted () {
-    this.setStep()
-    this.resetTranslate()
-  },
+const cards = ref([1, 2, 3, 4, 5, 6, 7, 8])
+const innerStyles = ref({})
+const step = ref('')
+const transitioning = ref(false)
+const inner = ref(null)
 
-  methods: {
-    setStep () {
-      const innerWidth = this.$refs.inner.scrollWidth
-      const totalCards = this.cards.length
-      this.step = `${innerWidth / totalCards}px`
-    },
+function setStep() {
+  const innerWidth = inner.value.scrollWidth
+  const totalCards = cards.value.length
+  step.value = `${innerWidth / totalCards}px`
+}
 
-    next () {
-      if (this.transitioning) return
+function next() {
+  if (transitioning.value) return
+  transitioning.value = true
 
-      this.transitioning = true
+  moveLeft()
+  afterTransition(() => {
+    const card = cards.value.shift()
+    cards.value.push(card)
+    resetTranslate()
+    transitioning.value = false
+  })
+}
 
-      this.moveLeft()
+function prev() {
+  if (transitioning.value) return
+  transitioning.value = true
 
-      this.afterTransition(() => {
-        const card = this.cards.shift()
-        this.cards.push(card)
-        this.resetTranslate()
-        this.transitioning = false
-      })
-    },
+  moveRight()
+  afterTransition(() => {
+    const card = cards.value.pop()
+    cards.value.unshift(card)
+    resetTranslate()
+    transitioning.value = false
+  })
+}
 
-    prev () {
-      if (this.transitioning) return
-
-      this.transitioning = true
-
-      this.moveRight()
-
-      this.afterTransition(() => {
-        const card = this.cards.pop()
-        this.cards.unshift(card)
-        this.resetTranslate()
-        this.transitioning = false
-      })
-    },
-
-    moveLeft () {
-      this.innerStyles = {
-        transform: `translateX(-${this.step})
-                    translateX(-${this.step})`
-      }
-    },
-
-    moveRight () {
-      this.innerStyles = {
-        transform: `translateX(${this.step})
-                    translateX(-${this.step})`
-      }
-    },
-
-    afterTransition (callback) {
-      const listener = () => {
-        callback()
-        this.$refs.inner.removeEventListener('transitionend', listener)
-      }
-      this.$refs.inner.addEventListener('transitionend', listener)
-    },
-
-    resetTranslate () {
-      this.innerStyles = {
-        transition: 'none',
-        transform: `translateX(-${this.step})`
-      }
-    }
+function moveLeft() {
+  innerStyles.value = {
+    transform: `translateX(-${step.value})
+                translateX(-${step.value})`
   }
 }
+
+function moveRight() {
+  innerStyles.value = {
+    transform: `translateX(${step.value})
+                translateX(-${step.value})`
+  }
+}
+
+function afterTransition(callback) {
+  const listener = () => {
+    callback()
+    inner.value.removeEventListener('transitionend', listener)
+  }
+  inner.value.addEventListener('transitionend', listener)
+}
+
+function resetTranslate() {
+  innerStyles.value = {
+    transition: 'none',
+    transform: `translateX(-${step.value})`
+  }
+}
+
+onMounted(() => {
+  setStep()
+  resetTranslate()
+})
 </script>
 
-<style>
+<style scoped>
 .carousel {
   width: 170px;
   overflow: hidden;
@@ -110,7 +101,6 @@ export default {
   width: 40px;
   margin-right: 10px;
   display: inline-flex;
-
   /* optional */
   height: 40px;
   background-color: #39b1bd;
