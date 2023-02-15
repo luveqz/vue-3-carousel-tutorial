@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import {ref, onMounted} from 'vue'
+import { ref, onMounted } from 'vue'
 
 const cards = ref([1, 2, 3, 4, 5, 6, 7, 8])
 const innerStyles = ref({})
@@ -28,6 +28,7 @@ function setStep() {
 function next() {
   if (transitioning.value) return
   transitioning.value = true
+
   moveLeft()
   afterTransition(() => {
     const card = cards.value.shift()
@@ -40,6 +41,7 @@ function next() {
 function prev() {
   if (transitioning.value) return
   transitioning.value = true
+
   moveRight()
   afterTransition(() => {
     const card = cards.value.pop()
@@ -52,14 +54,14 @@ function prev() {
 function moveLeft() {
   innerStyles.value = {
     transform: `translateX(-${step.value})
-                    translateX(-${step.value})`
+                translateX(-${step.value})`
   }
 }
 
 function moveRight() {
   innerStyles.value = {
     transform: `translateX(${step.value})
-                    translateX(-${step.value})`
+                translateX(-${step.value})`
   }
 }
 
@@ -81,7 +83,7 @@ function resetTranslate() {
 onMounted(() => {
   setStep()
   resetTranslate()
-});
+})
 </script>
 
 <style scoped>
