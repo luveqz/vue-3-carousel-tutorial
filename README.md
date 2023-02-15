@@ -8,6 +8,8 @@ Instead of going through a complex third-party library docs, I tried to figure o
 
 If you want to see a real-world example, I used the logic of this approach (inspired by a Thin Tran's [tutorial][link-tinyso]) in one of my recent projects: [sprout.luvejo.me](https://sprout.luvejo.me).
 
+**Bonus**: Thanks to [Matt Jenkins](https://github.com/ArtDepartmentMJ), you can now check an [updated version](https://github.com/luvejo/vue-3-carousel-tutorial/tree/composition-api) that uses the Composition API with the Setup Syntax.
+
 _(Originally published at [DEV][link-dev])._
 
 ## 1. Understanding the structure
